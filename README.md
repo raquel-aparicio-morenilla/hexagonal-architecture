@@ -1,5 +1,14 @@
 # hexagonal-architecture
 
+## Prerequisites
+
+* Java 11 is set up as the sdk in File > Project Structure > Project Settings > Project
+* Java 11 is set up as the Gradle JVM in Preferences > Build, Execution, Deployment > Gradle
+* ![img.png](img.png)
+
+
+# Automated Quarkus README
+
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
