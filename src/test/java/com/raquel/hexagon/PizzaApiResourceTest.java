@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
@@ -18,11 +17,11 @@ import static org.mockito.Mockito.when;
 class PizzaApiResourceTest {
 
     @InjectMock
-    PizzeriaRepository pizzeriaRepository = mock(PizzeriaRepository.class);
+    PizzaService pizzaService = mock(PizzaService.class);
 
     @Test
     void shouldReturnEmptyListWhenCallingGetAllPizzas() {
-        when(pizzeriaRepository.getAllPizzas()).thenReturn(new ArrayList<>());
+        when(pizzaService.getAllPizzas()).thenReturn(new ArrayList<>());
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas")
@@ -33,7 +32,7 @@ class PizzaApiResourceTest {
 
     @Test
     void shouldReturn2ItemListWhenCallingGetAllPizzas() {
-        when(pizzeriaRepository.getAllPizzas()).thenReturn(Arrays.asList(new Pizza("pepperoni", 15), new Pizza("barbeque", 19)));
+        when(pizzaService.getAllPizzas()).thenReturn(Arrays.asList(new Pizza("pepperoni", 15), new Pizza("barbeque", 19)));
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas")
@@ -43,12 +42,12 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldReturnPizzaWhenGettingExistingPizza() {
+    public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException {
         String pizzaName = "pepperoni";
         int pizzaPrice = 20;
 
-        Optional<Pizza> expectedResult = Optional.of(new Pizza(pizzaName, pizzaPrice));
-        when(pizzeriaRepository.getPizza(pizzaName)).thenReturn(expectedResult);
+        Pizza pizza = new Pizza(pizzaName, pizzaPrice);
+        when(pizzaService.getPizza(pizzaName)).thenReturn(pizza);
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas/" +  pizzaName)
@@ -59,8 +58,10 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldReturn404WhenGettingNotExistingPizza() {
+    public void shouldReturn404WhenGettingNotExistingPizza() throws PizzaNotFoundException {
         String pizzaName = "pepperoni";
+
+        when(pizzaService.getPizza(pizzaName)).thenThrow(new PizzaNotFoundException(pizzaName + " is not on our menu"));
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas/" +  pizzaName)
@@ -69,12 +70,12 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldUpdatePizzaPrice() {
+    public void shouldUpdatePizzaPrice() throws PizzaNotFoundException {
         String pizzaName = "pepperoni";
         int pizzaPrice = 20;
 
-        Optional<Pizza> expectedResult = Optional.of(new Pizza(pizzaName, pizzaPrice));
-        when(pizzeriaRepository.getPizza(pizzaName)).thenReturn(expectedResult);
+        Pizza pizza = new Pizza(pizzaName, pizzaPrice);
+        when(pizzaService.updatePizzaPrice(pizzaName, pizzaPrice)).thenReturn(pizza);
 
         final JsonPizza jsonPizza = JsonPizza.builder()
                 .name(pizzaName)
@@ -91,12 +92,11 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldReturn404WhenUpdatingPizzaPrice() {
+    public void shouldReturn404WhenUpdatingPizzaPrice() throws PizzaNotFoundException {
         String pizzaName = "pepperoni";
         int pizzaPrice = 20;
 
-        Optional<Pizza> expectedResult = Optional.empty();
-        when(pizzeriaRepository.getPizza(pizzaName)).thenReturn(expectedResult);
+        when(pizzaService.updatePizzaPrice(pizzaName, pizzaPrice)).thenThrow(new PizzaNotFoundException(pizzaName + " is not on our menu"));
 
         final JsonPizza jsonPizza = JsonPizza.builder()
                 .name(pizzaName)

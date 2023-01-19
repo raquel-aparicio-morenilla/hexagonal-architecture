@@ -20,7 +20,6 @@ public class PizzaService implements PizzaManager {
     }
 
     public Pizza getPizza(String name) throws PizzaNotFoundException {
-        //TODO add logging
         Optional<Pizza> optPizza = pizzeriaRepository.getPizza(name);
         if(optPizza.isEmpty()){
             throw new PizzaNotFoundException(name + " is not on our menu");
