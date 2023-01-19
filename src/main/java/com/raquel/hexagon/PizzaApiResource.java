@@ -1,10 +1,7 @@
 package com.raquel.hexagon;
 
 import javax.inject.Inject;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,10 +30,10 @@ public class PizzaApiResource {
     }
 
     @POST
-    @Path("/{name}/{price}")
     @Produces(MediaType.APPLICATION_JSON)
-    public PizzaResponse updatePizzaPrice(String name, int price) throws PizzaNotFoundException {
-        Pizza pizza = pizzaManager.updatePizzaPrice(name, price);
+    @Consumes("application/json")
+    public PizzaResponse updatePizzaPrice(JsonPizza jsonPizza) throws PizzaNotFoundException {
+        Pizza pizza = pizzaManager.updatePizzaPrice(jsonPizza.getName(), jsonPizza.getPrice());
         return PizzaResponse.builder().name(pizza.getName()).price(pizza.getPrice()).build();
     }
 }

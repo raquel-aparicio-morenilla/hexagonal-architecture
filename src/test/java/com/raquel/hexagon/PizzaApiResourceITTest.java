@@ -15,10 +15,15 @@ public class PizzaApiResourceITTest {
     @Inject
     ArrayListPizzeriaRepository arrayListPizzeriaRepository;
 
+    private final String PEPPERONI_PIZZA_NAME = "pepperoni";
+    private final int PEPPERONI_PIZZA_PRICE = 15;
+    private final String BARBEQUE_PIZZA_NAME = "barbeque";
+    private final int BARBEQUE_PIZZA_PRICE = 19;
+
     @BeforeEach
     void setUp() {
-        arrayListPizzeriaRepository.storePizza(new Pizza("pepperoni", 15));
-        arrayListPizzeriaRepository.storePizza(new Pizza("barbeque", 19));
+        arrayListPizzeriaRepository.storePizza(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE));
+        arrayListPizzeriaRepository.storePizza(new Pizza(BARBEQUE_PIZZA_NAME,  BARBEQUE_PIZZA_PRICE));
     }
 
     @BeforeEach
@@ -49,11 +54,11 @@ public class PizzaApiResourceITTest {
     @Test
     public void shouldReturnPizzaWhenGettingExistingPizza() {
         given().contentType(ContentType.JSON)
-          .when().get("/pizzas/pepperoni")
-          .then()
+             .when().get("/pizzas/" + PEPPERONI_PIZZA_NAME)
+             .then()
              .statusCode(200)
-             .body("name", is("pepperoni"))
-             .body("price", is(15));
+             .body("name", is(PEPPERONI_PIZZA_NAME))
+             .body("price", is(PEPPERONI_PIZZA_PRICE));
     }
 
     @Test
@@ -66,11 +71,25 @@ public class PizzaApiResourceITTest {
 
     @Test
     public void shouldUpdatePizzaPrice(){
-        String pizzaName = "pepperoni";
-        int pizzaPrice = 20;
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = PEPPERONI_PIZZA_PRICE + 1;
 
         given().contentType(ContentType.JSON)
-                .when().post("/pizzas/" + pizzaName + "/" + pizzaPrice)
+                .when().get("/pizzas/" + PEPPERONI_PIZZA_NAME)
+                .then()
+                .statusCode(200)
+                .body("name", is(pizzaName))
+                .body("price", is(PEPPERONI_PIZZA_PRICE));
+
+        final JsonPizza jsonPizza = JsonPizza.builder()
+                .name(pizzaName)
+                .price(pizzaPrice)
+                .build();
+
+        given().contentType(ContentType.JSON)
+                .body(jsonPizza)
+                .when()
+                .post("/pizzas")
                 .then()
                 .statusCode(200)
                 .body("name", is(pizzaName))
@@ -82,9 +101,14 @@ public class PizzaApiResourceITTest {
         String pizzaName = "carbonara";
         int pizzaPrice = 20;
 
-        given()
-                .contentType(ContentType.JSON)
-                .when().post("/pizzas/" + pizzaName + "/" + pizzaPrice)
+        final JsonPizza jsonPizza = JsonPizza.builder()
+                .name(pizzaName)
+                .price(pizzaPrice)
+                .build();
+
+        given().contentType(ContentType.JSON)
+                .body(jsonPizza)
+                .when().post("/pizzas/")
                 .then()
                 .statusCode(404);
     }

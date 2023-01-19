@@ -51,7 +51,7 @@ class PizzaApiResourceTest {
         when(pizzeriaRepository.getPizza(pizzaName)).thenReturn(expectedResult);
 
         given().contentType(ContentType.JSON)
-                .when().post("/pizzas/" +  pizzaName + "/" + pizzaPrice)
+                .when().get("/pizzas/" +  pizzaName)
                 .then()
                 .statusCode(200)
                 .body("name", is(pizzaName))
@@ -76,9 +76,14 @@ class PizzaApiResourceTest {
         Optional<Pizza> expectedResult = Optional.of(new Pizza(pizzaName, pizzaPrice));
         when(pizzeriaRepository.getPizza(pizzaName)).thenReturn(expectedResult);
 
-        given()
-                .contentType(ContentType.JSON)
-                .when().post("/pizzas/" + pizzaName + "/" + pizzaPrice)
+        final JsonPizza jsonPizza = JsonPizza.builder()
+                .name(pizzaName)
+                .price(pizzaPrice)
+                .build();
+
+        given().contentType(ContentType.JSON)
+                .body(jsonPizza)
+                .when().post("/pizzas/")
                 .then()
                 .statusCode(200)
                 .body("name", is(pizzaName))
@@ -93,9 +98,14 @@ class PizzaApiResourceTest {
         Optional<Pizza> expectedResult = Optional.empty();
         when(pizzeriaRepository.getPizza(pizzaName)).thenReturn(expectedResult);
 
-        given()
-                .contentType(ContentType.JSON)
-                .when().post("/pizzas/" + pizzaName + "/" + pizzaPrice)
+        final JsonPizza jsonPizza = JsonPizza.builder()
+                .name(pizzaName)
+                .price(pizzaPrice)
+                .build();
+
+        given().contentType(ContentType.JSON)
+                .body(jsonPizza)
+                .when().post("/pizzas/")
                 .then()
                 .statusCode(404);
     }
