@@ -10,6 +10,4 @@ public interface PizzeriaRepository {
     Optional<Pizza> getPizza(String name);
 
     void storePizza(Pizza pizza);
-
-    boolean storeOrder(Order order);
 }

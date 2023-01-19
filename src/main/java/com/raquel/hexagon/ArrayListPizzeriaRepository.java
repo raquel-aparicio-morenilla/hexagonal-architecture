@@ -1,7 +1,6 @@
 package com.raquel.hexagon;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.time.Instant;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -9,9 +8,6 @@ import java.util.stream.Collectors;
 public class ArrayListPizzeriaRepository implements PizzeriaRepository {
 
     Map<String, DbPizza> dbPizzaList = new HashMap<>();
-
-    List<DbOrder> dbOrderList = new ArrayList<>();
-
 
     public void resetSystem(){
         removeAllPizzas();
@@ -37,13 +33,5 @@ public class ArrayListPizzeriaRepository implements PizzeriaRepository {
         DbPizza dbPizza = DbPizza.builder().name(pizza.getName()).price(pizza.getPrice()).build();
         dbPizzaList.put(dbPizza.getName(), dbPizza);
     }
-
-    @Override
-    public boolean storeOrder(Order order) {
-        DbOrder dbOrder = DbOrder.builder().customerName(order.getCustomerName()).orderedAt(Instant.now()).build();
-        dbOrderList.add(dbOrder);
-        return true;
-    }
-
 
 }
