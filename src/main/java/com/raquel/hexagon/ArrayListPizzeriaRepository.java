@@ -9,14 +9,6 @@ public class ArrayListPizzeriaRepository implements PizzeriaRepository {
 
     Map<String, DbPizza> dbPizzaList = new HashMap<>();
 
-    public void resetSystem(){
-        removeAllPizzas();
-    }
-
-    public void removeAllPizzas() {
-        dbPizzaList.clear();
-    }
-
     @Override
     public List<Pizza> getAllPizzas() {
         return dbPizzaList.values().stream().map(dbPizza -> Pizza.builder().name(dbPizza.getName()).price(dbPizza.getPrice()).build()).collect(Collectors.toList());
@@ -34,4 +26,12 @@ public class ArrayListPizzeriaRepository implements PizzeriaRepository {
         dbPizzaList.put(dbPizza.getName(), dbPizza);
     }
 
+    @Override
+    public void resetSystem(){
+        removeAllPizzas();
+    }
+
+    public void removeAllPizzas() {
+        dbPizzaList.clear();
+    }
 }

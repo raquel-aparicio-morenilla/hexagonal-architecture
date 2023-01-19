@@ -11,29 +11,30 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
 @QuarkusTest
-public class PizzaApiResourceITTest {
-    @Inject
-    ArrayListPizzeriaRepository arrayListPizzeriaRepository;
+public class PizzaApiResourceIT {
 
     private final String PEPPERONI_PIZZA_NAME = "pepperoni";
     private final int PEPPERONI_PIZZA_PRICE = 15;
     private final String BARBEQUE_PIZZA_NAME = "barbeque";
     private final int BARBEQUE_PIZZA_PRICE = 19;
 
+    @Inject
+    PizzeriaRepository pizzeriaRepository;
+
     @BeforeEach
     void setUp() {
-        arrayListPizzeriaRepository.storePizza(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE));
-        arrayListPizzeriaRepository.storePizza(new Pizza(BARBEQUE_PIZZA_NAME,  BARBEQUE_PIZZA_PRICE));
+        pizzeriaRepository.storePizza(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE));
+        pizzeriaRepository.storePizza(new Pizza(BARBEQUE_PIZZA_NAME,  BARBEQUE_PIZZA_PRICE));
     }
 
     @BeforeEach
     void tearDown() {
-        arrayListPizzeriaRepository.resetSystem();
+        pizzeriaRepository.resetSystem();
     }
 
     @Test
     void shouldReturnEmptyListWhenCallingGetAllPizzas() {
-        arrayListPizzeriaRepository.resetSystem();
+        pizzeriaRepository.resetSystem();
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas")

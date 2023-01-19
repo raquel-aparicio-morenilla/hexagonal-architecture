@@ -16,6 +16,11 @@ import static org.mockito.Mockito.when;
 @QuarkusTest
 class PizzaApiResourceTest {
 
+    private final String PEPPERONI_PIZZA_NAME = "pepperoni";
+    private final int PEPPERONI_PIZZA_PRICE = 15;
+    private final String BARBEQUE_PIZZA_NAME = "barbeque";
+    private final int BARBEQUE_PIZZA_PRICE = 19;
+
     @InjectMock
     PizzaService pizzaService = mock(PizzaService.class);
 
@@ -32,7 +37,7 @@ class PizzaApiResourceTest {
 
     @Test
     void shouldReturn2ItemListWhenCallingGetAllPizzas() {
-        when(pizzaService.getAllPizzas()).thenReturn(Arrays.asList(new Pizza("pepperoni", 15), new Pizza("barbeque", 19)));
+        when(pizzaService.getAllPizzas()).thenReturn(Arrays.asList(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE), new Pizza(BARBEQUE_PIZZA_NAME, BARBEQUE_PIZZA_PRICE)));
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas")
@@ -43,8 +48,8 @@ class PizzaApiResourceTest {
 
     @Test
     public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException {
-        String pizzaName = "pepperoni";
-        int pizzaPrice = 20;
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
         Pizza pizza = new Pizza(pizzaName, pizzaPrice);
         when(pizzaService.getPizza(pizzaName)).thenReturn(pizza);
@@ -59,7 +64,7 @@ class PizzaApiResourceTest {
 
     @Test
     public void shouldReturn404WhenGettingNotExistingPizza() throws PizzaNotFoundException {
-        String pizzaName = "pepperoni";
+        String pizzaName = PEPPERONI_PIZZA_NAME;
 
         when(pizzaService.getPizza(pizzaName)).thenThrow(new PizzaNotFoundException(pizzaName + " is not on our menu"));
 
@@ -71,8 +76,8 @@ class PizzaApiResourceTest {
 
     @Test
     public void shouldUpdatePizzaPrice() throws PizzaNotFoundException {
-        String pizzaName = "pepperoni";
-        int pizzaPrice = 20;
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
         Pizza pizza = new Pizza(pizzaName, pizzaPrice);
         when(pizzaService.updatePizzaPrice(pizzaName, pizzaPrice)).thenReturn(pizza);
@@ -93,8 +98,8 @@ class PizzaApiResourceTest {
 
     @Test
     public void shouldReturn404WhenUpdatingPizzaPrice() throws PizzaNotFoundException {
-        String pizzaName = "pepperoni";
-        int pizzaPrice = 20;
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
         when(pizzaService.updatePizzaPrice(pizzaName, pizzaPrice)).thenThrow(new PizzaNotFoundException(pizzaName + " is not on our menu"));
 
