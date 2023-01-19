@@ -1,0 +1,1 @@
+This package shall contain the outputAdapter and their related objects outside the Domain Hexagon

@@ -1,0 +1,1 @@
+This package shall contain the use cases in the Domain Hexagon
