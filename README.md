@@ -1,5 +1,9 @@
 # hexagonal-architecture
 
+## Excalidraw plugin for intelliJ
+
+![img_1.png](img_1.png)
+
 ## Prerequisites
 
 * Java 11 is set up as the sdk in File > Project Structure > Project Settings > Project
