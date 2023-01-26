@@ -1,5 +1,9 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.infrastructure;
 
+import com.raquel.hexagon.domain.inputPort.PizzaService;
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.infrastructure.inputAdapter.JsonPizza;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
 import io.restassured.http.ContentType;
@@ -37,7 +41,8 @@ class PizzaApiResourceTest {
 
     @Test
     void shouldReturn2ItemListWhenCallingGetAllPizzas() {
-        when(pizzaService.getAllPizzas()).thenReturn(Arrays.asList(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE), new Pizza(BARBEQUE_PIZZA_NAME, BARBEQUE_PIZZA_PRICE)));
+
+        when(pizzaService.getAllPizzas()).thenReturn(Arrays.asList(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build(), Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build()));
 
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas")
@@ -51,7 +56,7 @@ class PizzaApiResourceTest {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
-        Pizza pizza = new Pizza(pizzaName, pizzaPrice);
+        Pizza pizza = Pizza.builder().name(pizzaName).price(pizzaPrice).build();
         when(pizzaService.getPizza(pizzaName)).thenReturn(pizza);
 
         given().contentType(ContentType.JSON)
@@ -79,7 +84,7 @@ class PizzaApiResourceTest {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
-        Pizza pizza = new Pizza(pizzaName, pizzaPrice);
+        Pizza pizza = Pizza.builder().name(pizzaName).price(pizzaPrice).build();
         when(pizzaService.updatePizzaPrice(pizzaName, pizzaPrice)).thenReturn(pizza);
 
         final JsonPizza jsonPizza = JsonPizza.builder()

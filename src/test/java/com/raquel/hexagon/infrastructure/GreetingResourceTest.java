@@ -1,4 +1,4 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.infrastructure;
 
 import io.quarkus.test.junit.QuarkusTest;
 import org.junit.jupiter.api.Test;

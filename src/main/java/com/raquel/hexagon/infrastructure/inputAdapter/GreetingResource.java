@@ -1,4 +1,4 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.infrastructure.inputAdapter;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;

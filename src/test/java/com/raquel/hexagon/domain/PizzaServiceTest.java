@@ -1,6 +1,10 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain;
 
 
+import com.raquel.hexagon.domain.inputPort.PizzaService;
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
+import com.raquel.hexagon.domain.useCase.PizzaManager;
 import io.quarkus.test.junit.mockito.InjectMock;
 
 import java.util.List;

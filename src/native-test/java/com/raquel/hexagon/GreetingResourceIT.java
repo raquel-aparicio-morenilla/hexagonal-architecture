@@ -1,5 +1,6 @@
 package com.raquel.hexagon;
 
+import com.raquel.hexagon.infrastructure.GreetingResourceTest;
 import io.quarkus.test.junit.QuarkusIntegrationTest;
 
 @QuarkusIntegrationTest

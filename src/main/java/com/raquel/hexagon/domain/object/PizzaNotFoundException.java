@@ -1,4 +1,4 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain.object;
 
 public class PizzaNotFoundException extends Exception {
 

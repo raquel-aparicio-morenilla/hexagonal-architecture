@@ -1,4 +1,7 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain.useCase;
+
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.object.PizzaNotFoundException;
 
 import java.util.List;
 

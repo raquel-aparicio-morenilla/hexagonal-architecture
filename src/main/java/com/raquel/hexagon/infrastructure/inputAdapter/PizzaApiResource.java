@@ -1,4 +1,8 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.infrastructure.inputAdapter;
+
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.domain.useCase.PizzaManager;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;

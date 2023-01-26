@@ -1,12 +1,14 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain.object;
 
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 
 @Builder
 @Getter
-public class PizzaResponse {
+public class Pizza {
 
     private String name;
+    @Setter
     private int price;
 }

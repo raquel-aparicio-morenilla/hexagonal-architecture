@@ -1,4 +1,6 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain.outputPort;
+
+import com.raquel.hexagon.domain.object.Pizza;
 
 import java.util.List;
 import java.util.Optional;

@@ -1,4 +1,7 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.infrastructure.outputAdapter;
+
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import java.util.*;

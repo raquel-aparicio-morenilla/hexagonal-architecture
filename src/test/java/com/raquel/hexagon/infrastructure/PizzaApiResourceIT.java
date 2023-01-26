@@ -1,5 +1,8 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.infrastructure;
 
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
+import com.raquel.hexagon.infrastructure.inputAdapter.JsonPizza;
 import io.quarkus.test.junit.QuarkusTest;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +26,8 @@ public class PizzaApiResourceIT {
 
     @BeforeEach
     void setUp() {
-        pizzeriaRepository.storePizza(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE));
-        pizzeriaRepository.storePizza(new Pizza(BARBEQUE_PIZZA_NAME,  BARBEQUE_PIZZA_PRICE));
+        pizzeriaRepository.storePizza(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build());
+        pizzeriaRepository.storePizza(Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build());
     }
 
     @BeforeEach

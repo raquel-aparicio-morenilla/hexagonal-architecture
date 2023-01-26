@@ -1,5 +1,7 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain;
 
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -9,7 +11,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-abstract class PizzeriaRepositoryIT {
+public abstract class PizzeriaRepositoryIT {
 
     private final String PEPPERONI_PIZZA_NAME = "pepperoni";
     private final int PEPPERONI_PIZZA_PRICE = 15;
@@ -24,8 +26,8 @@ abstract class PizzeriaRepositoryIT {
     void setUp() {
         pizzeriaRepository = getPizzeriaRepositoryUnderTest();
 
-        pizzeriaRepository.storePizza(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE));
-        pizzeriaRepository.storePizza(new Pizza(BARBEQUE_PIZZA_NAME,  BARBEQUE_PIZZA_PRICE));
+        pizzeriaRepository.storePizza(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build());
+        pizzeriaRepository.storePizza(Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build());
     }
 
     @Test

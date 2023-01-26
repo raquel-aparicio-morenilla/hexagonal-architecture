@@ -1,5 +1,8 @@
-package com.raquel.hexagon;
+package com.raquel.hexagon.domain;
 
+import com.raquel.hexagon.domain.object.Pizza;
+import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.domain.useCase.PizzaManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +43,7 @@ abstract class PizzaManagerTest {
 
     @Test
     void shouldReturn2ItemListWhenCallingGetAllPizzas() {
-        setUpExpectedPizzas(Arrays.asList(new Pizza(PEPPERONI_PIZZA_NAME, PEPPERONI_PIZZA_PRICE), new Pizza(BARBEQUE_PIZZA_NAME, BARBEQUE_PIZZA_PRICE)));
+        setUpExpectedPizzas(Arrays.asList(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build(), Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build()));
 
         List<Pizza> allPizzas = pizzaManager.getAllPizzas();
         assertThat(allPizzas.size()).isEqualTo(2);
@@ -50,7 +53,7 @@ abstract class PizzaManagerTest {
     public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
-        setUpExpectedPizza(new Pizza(pizzaName, pizzaPrice));
+        setUpExpectedPizza(Pizza.builder().name(pizzaName).price(pizzaPrice).build());
 
         Pizza pizza = pizzaManager.getPizza(pizzaName);
         assertThat(pizza.getName()).isEqualTo(pizzaName);
@@ -69,7 +72,7 @@ abstract class PizzaManagerTest {
     public void shouldUpdatePizzaPrice() throws PizzaNotFoundException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE + 1;
-        setUpExpectedPizza(new Pizza(pizzaName, PEPPERONI_PIZZA_PRICE));
+        setUpExpectedPizza(Pizza.builder().name(pizzaName).price(PEPPERONI_PIZZA_PRICE).build());
 
         Pizza pizza = pizzaManager.updatePizzaPrice(pizzaName, pizzaPrice);
         assertThat(pizza.getName()).isEqualTo(pizzaName);
