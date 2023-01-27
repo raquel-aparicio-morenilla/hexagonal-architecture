@@ -2,6 +2,7 @@ package com.raquel.hexagon.domain.inputPort;
 
 import com.raquel.hexagon.domain.object.Pizza;
 import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.domain.object.PizzaNotValidException;
 import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
 import com.raquel.hexagon.domain.useCase.PizzaManager;
 import lombok.AllArgsConstructor;
@@ -23,16 +24,18 @@ public class PizzaService implements PizzaManager {
         return pizzeriaRepository.getAllPizzas();
     }
 
-    public Pizza getPizza(String name) throws PizzaNotFoundException {
+    public Pizza getPizza(String name) throws PizzaNotFoundException, PizzaNotValidException {
         Optional<Pizza> optPizza = pizzeriaRepository.getPizza(name);
         if(optPizza.isEmpty()){
             throw new PizzaNotFoundException(name + " is not on our menu");
         }
-        return optPizza.get();
+
+        Pizza pizza = optPizza.get();
+        return pizza;
     }
 
     @Override
-    public Pizza updatePizzaPrice(String name, int price) throws PizzaNotFoundException {
+    public Pizza updatePizzaPrice(String name, int price) throws PizzaNotFoundException,PizzaNotValidException {
         Optional<Pizza> optPizza = pizzeriaRepository.getPizza(name);
         if(optPizza.isEmpty()){
             throw new PizzaNotFoundException(name + " is not on our menu");

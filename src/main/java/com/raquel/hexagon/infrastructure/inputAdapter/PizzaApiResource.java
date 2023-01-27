@@ -2,6 +2,7 @@ package com.raquel.hexagon.infrastructure.inputAdapter;
 
 import com.raquel.hexagon.domain.object.Pizza;
 import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.domain.object.PizzaNotValidException;
 import com.raquel.hexagon.domain.useCase.PizzaManager;
 
 import javax.inject.Inject;
@@ -28,7 +29,7 @@ public class PizzaApiResource {
     @GET
     @Path("/{name}")
     @Produces(MediaType.APPLICATION_JSON)
-    public PizzaResponse getPizza(String name) throws PizzaNotFoundException {
+    public PizzaResponse getPizza(String name) throws PizzaNotFoundException, PizzaNotValidException {
         Pizza pizza = pizzaManager.getPizza(name);
         return PizzaResponse.builder().name(pizza.getName()).price(pizza.getPrice()).build();
     }
@@ -36,7 +37,7 @@ public class PizzaApiResource {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
-    public PizzaResponse updatePizzaPrice(JsonPizza jsonPizza) throws PizzaNotFoundException {
+    public PizzaResponse updatePizzaPrice(JsonPizza jsonPizza) throws PizzaNotFoundException , PizzaNotValidException {
         Pizza pizza = pizzaManager.updatePizzaPrice(jsonPizza.getName(), jsonPizza.getPrice());
         return PizzaResponse.builder().name(pizza.getName()).price(pizza.getPrice()).build();
     }

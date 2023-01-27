@@ -3,6 +3,7 @@ package com.raquel.hexagon.infrastructure;
 import com.raquel.hexagon.domain.inputPort.PizzaService;
 import com.raquel.hexagon.domain.object.Pizza;
 import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.domain.object.PizzaNotValidException;
 import com.raquel.hexagon.infrastructure.inputAdapter.JsonPizza;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.junit.mockito.InjectMock;
@@ -52,7 +53,7 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException {
+    public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException, PizzaNotValidException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
@@ -68,7 +69,7 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldReturn404WhenGettingNotExistingPizza() throws PizzaNotFoundException {
+    public void shouldReturn404WhenGettingNotExistingPizza() throws PizzaNotFoundException, PizzaNotValidException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
 
         when(pizzaService.getPizza(pizzaName)).thenThrow(new PizzaNotFoundException(pizzaName + " is not on our menu"));
@@ -80,7 +81,19 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldUpdatePizzaPrice() throws PizzaNotFoundException {
+    public void shouldReturn403WhenGettingPizzaWithInvalidPrice() throws PizzaNotFoundException, PizzaNotValidException {
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+
+        when(pizzaService.getPizza(pizzaName)).thenThrow(new PizzaNotValidException("Pizza is not valid, price is below 0."));
+
+        given().contentType(ContentType.JSON)
+                .when().get("/pizzas/" +  pizzaName)
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    public void shouldUpdatePizzaPrice() throws PizzaNotFoundException, PizzaNotValidException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
@@ -102,7 +115,7 @@ class PizzaApiResourceTest {
     }
 
     @Test
-    public void shouldReturn404WhenUpdatingPizzaPrice() throws PizzaNotFoundException {
+    public void shouldReturn404WhenUpdatingPizzaPrice() throws PizzaNotFoundException, PizzaNotValidException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
 
@@ -118,5 +131,24 @@ class PizzaApiResourceTest {
                 .when().post("/pizzas/")
                 .then()
                 .statusCode(404);
+    }
+
+    @Test
+    public void shouldReturn403WhenUpdatingPizzaPriceOf0() throws PizzaNotFoundException, PizzaNotValidException {
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = PEPPERONI_PIZZA_PRICE;
+
+        when(pizzaService.updatePizzaPrice(pizzaName, pizzaPrice)).thenThrow(new PizzaNotValidException("Pizza is not valid, price is below 0."));
+
+        final JsonPizza jsonPizza = JsonPizza.builder()
+                .name(pizzaName)
+                .price(pizzaPrice)
+                .build();
+
+        given().contentType(ContentType.JSON)
+                .body(jsonPizza)
+                .when().post("/pizzas/")
+                .then()
+                .statusCode(403);
     }
 }

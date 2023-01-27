@@ -4,7 +4,10 @@ import com.raquel.hexagon.domain.object.Pizza;
 import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
 import com.raquel.hexagon.infrastructure.inputAdapter.JsonPizza;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.junit.QuarkusTestProfile;
+import io.quarkus.test.junit.TestProfile;
 import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,12 +16,27 @@ import javax.inject.Inject;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 
+
 @QuarkusTest
+@TestProfile(PizzaApiResourceIT.CustomTestProfile.class)
 public class PizzaApiResourceIT {
+
+
+    public static class CustomTestProfile implements QuarkusTestProfile {
+
+        @Override
+        //This overrides the quarkusProfile being set.
+        // By default during tests, this will be "test".
+        public String getConfigProfile() {
+            return "test";
+        }
+    }
+
 
     private final String PEPPERONI_PIZZA_NAME = "pepperoni";
     private final int PEPPERONI_PIZZA_PRICE = 15;
     private final String BARBEQUE_PIZZA_NAME = "barbeque";
+    private final String INVALID_PIZZA_NAME = "invalidPizza";
     private final int BARBEQUE_PIZZA_PRICE = 19;
 
     @Inject
@@ -28,9 +46,10 @@ public class PizzaApiResourceIT {
     void setUp() {
         pizzeriaRepository.storePizza(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build());
         pizzeriaRepository.storePizza(Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build());
+        pizzeriaRepository.storePizza(Pizza.builder().name(INVALID_PIZZA_NAME).price(0).build());
     }
 
-    @BeforeEach
+    @AfterEach
     void tearDown() {
         pizzeriaRepository.resetSystem();
     }
@@ -47,12 +66,12 @@ public class PizzaApiResourceIT {
     }
 
     @Test
-    public void shouldReturn2ItemListWhenGettingAllPizzas() {
+    public void shouldReturn3ItemListWhenGettingAllPizzas() {
         given().contentType(ContentType.JSON)
                 .when().get("/pizzas")
                 .then()
                 .statusCode(200)
-                .body("$.size()", is(2));
+                .body("$.size()", is(3));
     }
 
     @Test
@@ -71,6 +90,31 @@ public class PizzaApiResourceIT {
                 .when().get("/pizzas/carbonara")
                 .then()
                 .statusCode(404);
+    }
+
+    @Test
+    public void shouldReturn403WhenUpdatingPizzaToNoPrice() {
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = 0;
+
+        final JsonPizza jsonPizza = JsonPizza.builder()
+                .name(pizzaName)
+                .price(pizzaPrice)
+                .build();
+
+        given().contentType(ContentType.JSON)
+                .body(jsonPizza)
+                .when().post("/pizzas/")
+                .then()
+                .statusCode(403);
+    }
+
+    @Test
+    public void shouldReturn403WhenGettingPizzaWithNoPrice() {
+        given().contentType(ContentType.JSON)
+                .when().get("/pizzas/invalidPizza")
+                .then()
+                .statusCode(403);
     }
 
     @Test

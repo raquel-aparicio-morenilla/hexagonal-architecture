@@ -1,15 +1,12 @@
-package com.raquel.hexagon.domain.object;
+package com.raquel.hexagon.infrastructure.outputAdapter;
+
 
 import lombok.Builder;
 import lombok.Getter;
-import lombok.Setter;
 
 @Builder
 @Getter
-public class Pizza {
-
+public class S3ObjectSummary {
     private String name;
-    @Setter
     private int price;
-
 }

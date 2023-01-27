@@ -2,12 +2,18 @@ package com.raquel.hexagon.infrastructure.outputAdapter;
 
 import com.raquel.hexagon.domain.object.Pizza;
 import com.raquel.hexagon.domain.outputPort.PizzeriaRepository;
+import io.quarkus.arc.DefaultBean;
+import io.quarkus.arc.profile.IfBuildProfile;
 
 import javax.enterprise.context.ApplicationScoped;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
+@DefaultBean
 public class ArrayListPizzeriaRepository implements PizzeriaRepository {
 
     Map<String, DbPizza> dbPizzaList = new HashMap<>();

@@ -2,6 +2,7 @@ package com.raquel.hexagon.domain;
 
 import com.raquel.hexagon.domain.object.Pizza;
 import com.raquel.hexagon.domain.object.PizzaNotFoundException;
+import com.raquel.hexagon.domain.object.PizzaNotValidException;
 import com.raquel.hexagon.domain.useCase.PizzaManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,14 +44,15 @@ abstract class PizzaManagerTest {
 
     @Test
     void shouldReturn2ItemListWhenCallingGetAllPizzas() {
-        setUpExpectedPizzas(Arrays.asList(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build(), Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build()));
+        setUpExpectedPizzas(Arrays.asList(Pizza.builder().name(PEPPERONI_PIZZA_NAME).price(PEPPERONI_PIZZA_PRICE).build(),
+                Pizza.builder().name(BARBEQUE_PIZZA_NAME).price(BARBEQUE_PIZZA_PRICE).build()));
 
         List<Pizza> allPizzas = pizzaManager.getAllPizzas();
         assertThat(allPizzas.size()).isEqualTo(2);
     }
 
     @Test
-    public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException {
+    public void shouldReturnPizzaWhenGettingExistingPizza() throws PizzaNotFoundException, PizzaNotValidException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE;
         setUpExpectedPizza(Pizza.builder().name(pizzaName).price(pizzaPrice).build());
@@ -69,7 +71,7 @@ abstract class PizzaManagerTest {
     }
 
     @Test
-    public void shouldUpdatePizzaPrice() throws PizzaNotFoundException {
+    public void shouldUpdatePizzaPrice() throws PizzaNotFoundException, PizzaNotValidException {
         String pizzaName = PEPPERONI_PIZZA_NAME;
         int pizzaPrice = PEPPERONI_PIZZA_PRICE + 1;
         setUpExpectedPizza(Pizza.builder().name(pizzaName).price(PEPPERONI_PIZZA_PRICE).build());
@@ -86,5 +88,15 @@ abstract class PizzaManagerTest {
 
         assertThatThrownBy(() -> pizzaManager.updatePizzaPrice(pizzaName, pizzaPrice))
                 .isInstanceOf(PizzaNotFoundException.class);
+    }
+
+    @Test
+    public void shouldReturn403WhenUpdatingPizzaPriceToZero() {
+        String pizzaName = PEPPERONI_PIZZA_NAME;
+        int pizzaPrice = 0;
+        setUpExpectedPizza(Pizza.builder().name(pizzaName).price(PEPPERONI_PIZZA_PRICE).build());
+
+        assertThatThrownBy(() -> pizzaManager.updatePizzaPrice(pizzaName, pizzaPrice))
+                .isInstanceOf(PizzaNotValidException.class);
     }
 }
